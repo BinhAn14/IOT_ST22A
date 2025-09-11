@@ -1,0 +1,28 @@
+{% load static %}
+<li class="menu-item active open" data-id="dashboard">
+  <a href="/.." class="menu-link">
+    <i class="menu-icon tf-icons bx bx-home-smile"></i>
+    <div class="text-truncate">Dashboards</div>
+  </a>
+</li>
+
+<li class="menu-item" data-id="profile">
+  <a href="../profile" class="menu-link">
+    <i class="bx bx-user-circle"></i>
+    <div class="text-truncate">Profile</div>
+  </a>
+</li>
+
+<li class="menu-item" data-id="attendance">
+  <a href="{% static '../face_recognition' %}" class="menu-link">
+    <i class="bx bxs-camera-home"></i>
+    <div class="text-truncate">Attendance</div>
+  </a>
+</li>
+
+<li class="menu-item" data-id="history">
+  <a href="../history" class="menu-link">
+    <i class="bx bx-history"></i>
+    <div class="text-truncate">History Attendance</div>
+  </a>
+</li>

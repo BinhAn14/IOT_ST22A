@@ -1,0 +1,203 @@
+{%extends "masterPage.html" %} {%block title%} Courses UTH {%endblock%}
+
+<!-- MENU -->
+
+<!-- Dashboards -->
+{% block menuDashboards %} {%include '../includes/leftmenu/dashboards.html'%}
+{%endblock %}
+
+<!-- Layouts -->
+
+{% block layouts %} {% endblock %}
+<!-- Front Pages -->
+
+{% block frontPages %} {% endblock %}
+<!-- Apps & Pages -->
+
+{% block appAndPg %} {% endblock %}
+<!-- Components -->
+
+{% block components %} {% endblock %}
+
+<!-- Forms & Tables -->
+
+{% block formAndTb %} {% endblock %}
+<!-- Misc -->
+
+{% block Misc %} {% endblock %}
+
+<!-- NAVBAR -->
+{% block user %} {%include "../includes/navbar/user.html" %} {% endblock %}
+{%comment %}
+<!-- search -->
+{%block search %} {% endblock %} {% endcomment %}
+
+<!-- CONTENT -->
+{%block content%}
+<div class="card">
+  <h5 class="card-header pb-0 text-md-start text-center">History Attendence</h5>
+  <div class="card-datatable text-nowrap">
+    <div
+      id="DataTables_Table_0_wrapper"
+      class="dt-container dt-bootstrap5 dt-empty-footer"
+    >
+      <div class="row mx-3 my-0 justify-content-between">
+        <div
+          class="d-md-flex justify-content-between align-items-center dt-layout-start col-md-auto me-auto"
+        >
+          <button id="print-report" class="btn btn-primary">
+            🖨️ File excel
+          </button>
+        </div>
+        <div
+          class="d-md-flex justify-content-between align-items-center dt-layout-end col-md-auto ms-auto mt-0"
+        >
+          <div class="dt-search mt-md-6 mt-0">
+            <label for="dt-search-0">Search:</label
+            ><input
+              type="search"
+              class="form-control ms-4"
+              id="dt-search-0"
+              placeholder=""
+              aria-controls="DataTables_Table_0"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="justify-content-between dt-layout-table">
+        <div
+          class="d-md-flex justify-content-between align-items-center dt-layout-full table-responsive"
+        >
+          <div
+            id="DataTables_Table_0_processing"
+            class="dt-processing card"
+            role="status"
+            style="display: none"
+          >
+            <div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+          </div>
+          <table
+            class="datatables-ajax table table-bordered dataTable"
+            id="DataTables_Table_0"
+            aria-describedby="DataTables_Table_0_info"
+            style="width: 100%; text-align: center; margin: 20px 20px"
+          >
+            <colgroup>
+              <col data-dt-column="0" style="width: 247.706px" />
+              <col data-dt-column="1" style="width: 278.625px" />
+              <col data-dt-column="2" style="width: 200.406px" />
+              <col data-dt-column="3" style="width: 188.963px" />
+              <col data-dt-column="4" style="width: 176.588px" />
+              <col data-dt-column="5" style="width: 161.738px" />
+            </colgroup>
+            <thead>
+              <tr>
+                <th
+                  data-dt-column="0"
+                  rowspan="1"
+                  colspan="1"
+                  class="dt-orderable-asc dt-orderable-desc dt-ordering-asc"
+                  aria-sort="ascending"
+                  aria-label="Full name: Activate to invert sorting"
+                  tabindex="0"
+                >
+                  <span class="dt-column-title" role="button"
+                    >Student Name</span
+                  >
+                  <span class="dt-column-order"></span>
+                </th>
+                <th
+                  data-dt-column="1"
+                  rowspan="1"
+                  colspan="1"
+                  class="dt-orderable-asc dt-orderable-desc"
+                  aria-label="Email: Activate to sort"
+                  tabindex="0"
+                >
+                  <span class="dt-column-title" role="button">Student ID</span>
+                  <span class="dt-column-order"></span>
+                </th>
+                <th
+                  data-dt-column="1"
+                  rowspan="1"
+                  colspan="1"
+                  class="dt-orderable-asc dt-orderable-desc"
+                  aria-label="Email: Activate to sort"
+                  tabindex="0"
+                >
+                  <span class="dt-column-title" role="button">Class</span>
+                  <span class="dt-column-order"></span>
+                </th>
+                <th
+                  data-dt-column="4"
+                  rowspan="1"
+                  colspan="1"
+                  class="dt-orderable-asc dt-orderable-desc dt-type-date"
+                  aria-label="Start date: Activate to sort"
+                  tabindex="0"
+                >
+                  <span class="dt-column-title" role="button"
+                    >Attendance Date</span
+                  >
+                  <span class="dt-column-order"></span>
+                </th>
+                <th
+                  data-dt-column="2"
+                  rowspan="1"
+                  colspan="1"
+                  class="dt-orderable-asc dt-orderable-desc"
+                  aria-label="Position: Activate to sort"
+                  tabindex="0"
+                >
+                  <span class="dt-column-title" role="button"
+                    >Check-in Time</span
+                  >
+                  <span class="dt-column-order"></span>
+                </th>
+
+                <th
+                  data-dt-column="5"
+                  rowspan="1"
+                  colspan="1"
+                  class="dt-orderable-asc dt-orderable-desc dt-type-numeric"
+                  aria-label="Salary: Activate to sort"
+                  tabindex="0"
+                >
+                  <span class="dt-column-title" role="button">Status</span>
+                  <span class="dt-column-order"></span>
+                </th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for item in history %}
+              <tr>
+                <td class="sorting_1">{{ item.student_name }}</td>
+                <td>{{ item.student_id }}</td>
+                <td>{{ item.class_name }}</td>
+                <td class="dt-type-date">{{ item.date_attendance }}</td>
+                <td>{{ item.checkin_time|default:"-" }}</td>
+                <td class="dt-type-status">{{ item.get_status_display }}</td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="7" style="text-align: center">Không có dữ liệu</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+            <tfoot></tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{%endblock%}
+
+<!-- Footer -->
+{% block footer %} {%include "../includes/footer.html" %} {% endblock %}
