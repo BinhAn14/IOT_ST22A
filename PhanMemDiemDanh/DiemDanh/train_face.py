@@ -42,7 +42,7 @@ def collect_faces():
         k = cv2.waitKey(100) & 0xff
         if k == 27:   # ESC để thoát
             break
-        elif count >= 15:  
+        elif count >= 50:  
             break
 
     print(f"✅ Hoàn tất thu thập {count} ảnh")

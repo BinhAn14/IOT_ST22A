@@ -7,7 +7,7 @@ urlpatterns = [
     # path('/', views.home, name='home'),
     # path('index/', include('index.urls')),
     # path('login/', include('login.urls')),
-
+path('history/export/', views.export_history_excel, name='export_history_excel'),
     path('', views.get_home, name='home'),
     path('login/', views.get_login, name='login'),
     path('history/', views.get_history, name='history'),

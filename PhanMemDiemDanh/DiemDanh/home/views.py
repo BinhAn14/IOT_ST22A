@@ -14,7 +14,7 @@ from django.http import HttpResponse
 from django.template import loader
 from datetime import datetime
 from .models import history_attendance,teachers
-
+from django.conf import settings
 
 recognizer = cv2.face.LBPHFaceRecognizer_create()
 recognizer.read('trainer/trainer.yml')
@@ -58,12 +58,11 @@ def ghi_diem_danh(student_id):
 
     # Lưu DB
     history_attendance.objects.create(
-        id=int(datetime.now().timestamp()),
         student_name=student["Họ_tên"],
         student_id=student["MSSV"],
         class_name=student["Lớp"],
-        checkin_time=time_str,
-        date_attendance=date_str,
+        checkin_time=datetime.now().time(),
+        date_attendance=datetime.now().date(),
         status="present"
     )
 
@@ -231,21 +230,60 @@ def get_profile(request):
     
 def get_profileEdit(request):
     return render(request, 'home/profile-edit.html')
-
 def get_history(request):
     user = request.user
 
     if user.groups.filter(name="Teachers").exists():
-        # Nếu là giáo viên, xem tất cả lịch sử điểm danh
-        records = history_attendance.objects.all()
+        history = history_attendance.objects.all()
     else:
-        # Nếu là học sinh, chỉ xem lịch sử điểm danh của chính mình
-        records = history_attendance.objects.filter(student_id=user.username)
+        profile = getattr(user, 'userprofile', None)
+        if profile and profile.mssv:
+            history = history_attendance.objects.filter(student_id=profile.mssv)
+        else:
+            history = history_attendance.objects.none()  # nếu chưa có MSSV
 
-    return render(request, 'home/history.html', {'records': records})
+    return render(request, 'home/history.html', {'history': history})
+
 
 
 def get_face_recognition(request):
     return render(request, "home/face_recognition.html")  # Load giao diện nhận diện
 
-    
+def export_history_excel(request):
+    user = request.user
+
+    if user.groups.filter(name="Teachers").exists():
+        records = history_attendance.objects.all().values()
+    else:
+        profile = getattr(user, 'userprofile', None)
+        if profile and profile.mssv:
+            records = history_attendance.objects.filter(student_id=profile.mssv).values()
+        else:
+            messages.error(request, "Không có dữ liệu để xuất Excel")
+            return redirect('history')
+
+    if not records:
+        messages.error(request, "Không có dữ liệu để xuất Excel")
+        return redirect('history')
+
+    df = pd.DataFrame(records)
+
+    # Tạo thư mục lưu file trên server nếu chưa có
+    export_dir = os.path.join(settings.BASE_DIR, "exports")
+    os.makedirs(export_dir, exist_ok=True)
+
+    # Tạo tên file duy nhất
+    filename = f"history_attendance_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
+    file_path = os.path.join(export_dir, filename)
+
+    # Lưu file trên server
+    df.to_excel(file_path, index=False)
+
+    # Trả file về client để download
+    with open(file_path, 'rb') as f:
+        response = HttpResponse(
+            f.read(),
+            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        return response
