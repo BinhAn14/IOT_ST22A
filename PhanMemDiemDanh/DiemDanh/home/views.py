@@ -15,6 +15,8 @@ from django.template import loader
 from datetime import datetime
 from .models import history_attendance,teachers
 from django.conf import settings
+from .models import students
+
 
 # ====== THÊM MỚI: Import cho Face Training ======
 from django.http import JsonResponse
@@ -391,72 +393,94 @@ def train_face_view(request):
     return render(request, 'DiemDanh/train_face.html')
 
 @csrf_exempt
+
+@csrf_exempt
 def start_training(request):
-    """API bắt đầu quá trình training"""
+    """API bắt đầu quá trình training và tạo sinh viên mới"""
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
             student_id = data.get('student_id')
             student_name = data.get('student_name')
-            
+            gender = data.get('gender', 'Chưa xác định')
+            email = data.get('email', f"{student_id}@example.com")
+            contactPH = data.get('contactPH', f"000{student_id}")
+
             if not student_id or not student_name:
                 return JsonResponse({
-                    'success': False, 
+                    'success': False,
                     'message': 'Thiếu thông tin sinh viên'
                 })
-            
+
             if face_trainer.is_training:
                 return JsonResponse({
                     'success': False,
                     'message': 'Đang có quá trình training khác'
                 })
-            
+
+            # Tạo sinh viên mới trong DB nếu chưa có
+            from .models import students
+            student_obj, created = students.objects.get_or_create(
+                id=int(student_id),
+                defaults={
+                    'name_student': student_name,
+                    'student_id': str(student_id),
+                    'gender': gender,
+                    'email': email,
+                    'contactPH': contactPH
+                }
+            )
+
+            # Thêm vào student_info để nhận diện
+            global student_info
+            if int(student_id) not in student_info:
+                student_info[int(student_id)] = {
+                    "Họ_tên": student_name,
+                    "MSSV": str(student_id),
+                    "Giới_tính": gender,
+                    "Lớp": "Chưa xác định"
+                }
+
             # Bắt đầu training trong thread riêng
             def training_process():
                 face_trainer.is_training = True
                 face_trainer.training_progress = 0
                 face_trainer.current_student = {
-                    'id': student_id,
+                    'id': int(student_id),
                     'name': student_name
                 }
-                
+
                 try:
-                    # Thu thập dữ liệu
-                    collect_success = face_trainer.collect_faces(student_id, student_name)
-                    
+                    collect_success = face_trainer.collect_faces(int(student_id), student_name)
                     if collect_success:
-                        # Huấn luyện model
                         train_success = face_trainer.train_model()
-                        
                         if train_success:
                             print(f"✅ Hoàn thành training cho {student_name} (ID: {student_id})")
                         else:
                             print("❌ Lỗi khi huấn luyện model")
                     else:
                         print("❌ Lỗi khi thu thập dữ liệu")
-                        
                 except Exception as e:
                     print(f"❌ Lỗi training: {e}")
                 finally:
                     face_trainer.is_training = False
-            
-            # Chạy trong thread riêng để không block web
-            training_thread = threading.Thread(target=training_process)
-            training_thread.daemon = True
-            training_thread.start()
-            
+
+            threading.Thread(target=training_process, daemon=True).start()
+
             return JsonResponse({
                 'success': True,
-                'message': 'Bắt đầu quá trình training'
+                'message': f'Bắt đầu quá trình training cho {student_name}'
             })
-            
+
         except Exception as e:
             return JsonResponse({
                 'success': False,
                 'message': f'Lỗi: {str(e)}'
             })
-    
+
     return JsonResponse({'success': False, 'message': 'Method not allowed'})
+
+
 
 @csrf_exempt
 def training_progress(request):

@@ -16,7 +16,8 @@ face_cascade_path = "home/haarcascade/haarcascade_frontalface_default.xml"
 # 2. Thu thập dữ liệu
 # ==============================
 def collect_faces():
-    cam = cv2.VideoCapture(0)
+    # Dùng CAP_DSHOW để tránh lỗi grab frame trên Windows
+    cam = cv2.VideoCapture(0, cv2.CAP_DSHOW)
     face_cascade = cv2.CascadeClassifier(face_cascade_path)
 
     if not os.path.exists(dataset_path):
@@ -27,6 +28,7 @@ def collect_faces():
     while True:
         ret, img = cam.read()
         if not ret:
+            print("❌ Không lấy được frame từ camera")
             break
 
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
