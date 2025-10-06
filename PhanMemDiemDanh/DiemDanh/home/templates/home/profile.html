@@ -1,176 +1,110 @@
-{%extends "masterPage.html" %}
+{% extends "masterPage.html" %}
+{% load static %}
 
-{%load static%}
+{% block title %}
+Courses UDA
+{% endblock %}
 
-{%block title%}
-Courses UTH
-{%endblock%}
-
-<!-- MENU -->
-
-<!-- Dashboards -->
 {% block menuDashboards %}
-{%include '../includes/leftmenu/dashboards.html'%}
+{% include '../includes/leftmenu/dashboards.html' %}
 {% endblock %}
 
-<!-- Layouts -->
-
-{% block layouts %}
-{% endblock %}
-<!-- Front Pages -->
-
-{% block frontPages %}
-{% endblock %}
-<!-- Apps & Pages -->
-
-{% block appAndPg %}
-{% endblock %}
-<!-- Components -->
-
-{% block components %}
-{% endblock %}
-
-<!-- Forms & Tables -->
-
-{% block formAndTb %}
-{% endblock %}
-<!-- Misc -->
-
-{% block Misc %}
-{% endblock %}
-
-<!-- NAVBAR -->
 {% block user %}
-{%include "../includes/navbar/user.html" %}
+{% include "../includes/navbar/user.html" %}
 {% endblock %}
 
-{% block search %}
-{% endblock %}
-
-
-
-
-<!-- CONTENT -->
-{%block content%}
+{% block content %}
 <div class="container-xxl flex-grow-1 container-p-y">
-
-  {% load static %}
 
   <!-- Header -->
   <div class="row">
     <div class="col-12">
       <div class="card mb-6">
-        
-        <div class="user-profile-header d-flex flex-column flex-lg-row text-sm-start text-center mb-8" style="margin-top: 20px;">
+        <div class="user-profile-header d-flex flex-column flex-lg-row text-sm-start text-center p-4">
           
           <!-- Avatar -->
-          <div class="flex-shrink-0 mt-1 mx-sm-0 mx-auto">
+          <div class="flex-shrink-0 mx-auto mx-lg-0">
             <img src="{% static 'home/assets/img/avatars/1.png' %}" 
                  alt="User Image"
-                 class="d-block h-auto ms-0 ms-sm-6 rounded-3 user-profile-img">
+                 class="d-block h-auto rounded-circle border border-3 user-profile-img"
+                 style="width: 120px; height: 120px;">
           </div>
   
-          <!-- Thông tin người dùng -->
-          <div class="flex-grow-1 mt-3 mt-lg-5">
-            <div class="d-flex align-items-md-end align-items-sm-start align-items-center justify-content-md-between justify-content-start mx-5 flex-md-row flex-column gap-4">
+          <!-- User Info -->
+          <div class="flex-grow-1 mt-4 mt-lg-0 ps-lg-5">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
               
-              <div class="user-profile-info">
-                <h4 class="mb-2 mt-lg-7">{{ user.get_full_name }}</h4>
-                <ul class="list-inline mb-0 d-flex align-items-center flex-wrap justify-content-sm-start justify-content-center gap-4 mt-4">
-                  <li class="list-inline-item">
-                    <i class="icon-base bx bx-palette me-2 align-top"></i>
-                    <span class="fw-medium">{{ user.job_title|default:"Teacher" }}</span>
-                  </li>
-                  <li class="list-inline-item">
-                    <i class="icon-base bx bx-map me-2 align-top"></i>
-                    <span class="fw-medium">{{ user.location|default:"No Data" }}</span>
-                  </li>
-                  <li class="list-inline-item">
-                    <i class="icon-base bx bx-calendar me-2 align-top"></i>
-                    <span class="fw-medium">Joined {{ user.date_joined|date:"F Y" }}</span>
-                  </li>
-                </ul>
+              <div>
+                <h3 class="mb-2">{{ user.get_full_name }}</h3>
+                <p class="text-muted mb-2">
+                  <i class="bx bx-palette me-2"></i>{{ user.job_title|default:"Teacher" }}
+                </p>
+                <p class="text-muted mb-2">
+                  <i class="bx bx-map me-2"></i>{{ user.location|default:"No Data" }}
+                </p>
+                <p class="text-muted">
+                  <i class="bx bx-calendar me-2"></i>Joined {{ user.date_joined|date:"F Y" }}
+                </p>
               </div>
-  
-              <!-- edit -->
-              <a href="{% static '../profile-edit' %}" class="btn btn-primary mb-1">
-                <i class="icon-base bx bx-edit-alt icon-sm me-2"></i> Edit
+
+              <!-- Edit button -->
+              <a href="{% url 'profile-edit' %}" class="btn btn-primary">
+                <i class="bx bx-edit-alt me-1"></i> Edit Profile
               </a>
-  
             </div>
           </div>
         </div>
-  
       </div>
     </div>
   </div>
-  <!--/ Header -->
-  
+
   <!-- User Profile Content -->
   <div class="row">
-    <div class="col-xl-4 col-lg-5 col-md-5">
+    <div class="col-xl-4 col-lg-5 col-md-6">
+      
       <!-- About User -->
-      <div class="card mb-6">
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5 class="mb-0">About</h5>
+        </div>
         <div class="card-body">
-          <small class="card-text text-uppercase text-body-secondary small">About</small>
-          <ul class="list-unstyled my-3 py-1">
-            {% for item in teacher %}
-            <li class="d-flex align-items-center mb-4">
-              <i class="icon-base bx bx-user"></i>
-              <span class="fw-medium mx-2">Full Name:</span>
-              <span>{{ item.name_teacher }}</span>
-            </li>
-            <li class="d-flex align-items-center mb-4">
-              <i class='bx bx-id-card'></i>
-              <span class="fw-medium mx-2">Teacher ID:</span>
-              <span>{{ item.teacher_id }}</span>
-            </li>
-            <li class="d-flex align-items-center mb-4">
-              <i class='bx bx-calendar'></i>
-              <span class="fw-medium mx-2">Birthday:</span>
-              <span>{{ item.birth_day|date:"d/m/Y" }}</span>
-            </li>
-            <li class="d-flex align-items-center mb-4">
-              <i class="icon-base bx bx-flag"></i>
-              <span class="fw-medium mx-2">Gender:</span>
-              <span>{{ item.gender }}</span>
-            </li>
-            {% empty %}
-            <li class="text-center">Không có dữ liệu giáo viên</li>
-            {% endfor %}
+          {% for item in teacher %}
+          <ul class="list-unstyled">
+            <li class="mb-3"><i class="bx bx-user me-2"></i><strong>Full Name:</strong> {{ item.name_teacher }}</li>
+            <li class="mb-3"><i class="bx bx-id-card me-2"></i><strong>Teacher ID:</strong> {{ item.teacher_id }}</li>
+            <li class="mb-3"><i class="bx bx-calendar me-2"></i><strong>Birthday:</strong> {{ item.birth_day|date:"d/m/Y" }}</li>
+            <li><i class="bx bx-flag me-2"></i><strong>Gender:</strong> {{ item.gender }}</li>
           </ul>
-
-          <small class="card-text text-uppercase text-body-secondary small">Contacts</small>
-          <ul class="list-unstyled my-3 py-1">
-            {% for item in teacher %}
-            <li class="d-flex align-items-center mb-4">
-              <i class="icon-base bx bx-phone"></i>
-              <span class="fw-medium mx-2">Contact:</span>
-              <span>{{ item.contact|default:"-" }}</span>
-            </li>
-            <li class="d-flex align-items-center mb-4">
-              <i class="icon-base bx bx-envelope"></i>
-              <span class="fw-medium mx-2">Email:</span>
-              <span>{{ item.email|default:"-" }}</span>
-            </li>
-            {% empty %}
-            <li class="text-center">Không có thông tin liên hệ</li>
-            {% endfor %}
-          </ul>
+          {% empty %}
+          <p class="text-center text-muted">Không có dữ liệu giáo viên</p>
+          {% endfor %}
         </div>
       </div>
 
-      <!--/ About User -->
+      <!-- Contacts -->
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">Contacts</h5>
+        </div>
+        <div class="card-body">
+          {% for item in teacher %}
+          <ul class="list-unstyled">
+            <li class="mb-3"><i class="bx bx-phone me-2"></i><strong>Contact:</strong> {{ item.contact|default_if_none:"-" }}</li>
+            <li><i class="bx bx-envelope me-2"></i><strong>Email:</strong> {{ item.email|default_if_none:"-" }}</li>
+          </ul>
+          {% empty %}
+          <p class="text-center text-muted">Không có thông tin liên hệ</p>
+          {% endfor %}
+        </div>
+      </div>
+
     </div>
   </div>
   <!--/ User Profile Content -->
 
 </div>
-{%endblock%}
+{% endblock %}
 
-
-
-<!-- Footer -->
 {% block footer %}
-{%include "../includes/footer.html" %}
+{% include "../includes/footer.html" %}
 {% endblock %}
