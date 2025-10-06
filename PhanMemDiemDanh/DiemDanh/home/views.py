@@ -13,7 +13,7 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.template import loader
 from datetime import datetime
-from .models import history_attendance,teachers
+from .models import history_attendance, teachers
 from django.conf import settings
 
 recognizer = cv2.face.LBPHFaceRecognizer_create()
@@ -28,7 +28,6 @@ student_info = {
 
 def get_excel_file(student_id):
     return f"diem_danh_{student_id}.xlsx"
-
 
 
 # Hàm ghi điểm danh vào Excel
@@ -68,13 +67,8 @@ def ghi_diem_danh(student_id):
 
     return f"✔ Điểm danh: {student['Họ_tên']} ({student['MSSV']}) lúc {time_str} → File: {excel_file}"
 
-    
-    return f"{student['Họ_tên']} đã điểm danh hôm nay!"
-
 
 # Hàm nhận diện khuôn mặt từ camera
-import cv2
-
 import time
 import threading
 
@@ -134,8 +128,6 @@ def detect_faces():
         cam.release()
         cv2.destroyAllWindows()
 
-
-
     cam = cv2.VideoCapture(0)  # Mở camera
 
     try:
@@ -188,6 +180,8 @@ def detect_faces():
 @gzip.gzip_page
 def video_feed(request):
     return StreamingHttpResponse(detect_faces(), content_type='multipart/x-mixed-replace; boundary=frame')
+
+
 # dat ten get_ cho no dong bo voi cac ham khac
 def get_login(request):
     if request.method == 'POST':
@@ -215,7 +209,8 @@ def get_login(request):
 
     return render(request, 'home/loginPage.html')
 
-@login_required(login_url='home/loginPage.html')
+
+# BỎ login_required ở đây
 def get_home(request):
     today = datetime.today()
     context = {
@@ -224,12 +219,16 @@ def get_home(request):
     }
     return render(request, 'home/home.html', context)
 
+
 def get_profile(request):
     teacher = teachers.objects.all()  # Lấy toàn bộ danh sách giáo viên
     return render(request, 'home/profile.html', {'teacher': teacher})
     
+
 def get_profileEdit(request):
     return render(request, 'home/profile-edit.html')
+
+
 def get_history(request):
     user = request.user
 
@@ -245,9 +244,9 @@ def get_history(request):
     return render(request, 'home/history.html', {'history': history})
 
 
-
 def get_face_recognition(request):
     return render(request, "home/face_recognition.html")  # Load giao diện nhận diện
+
 
 def export_history_excel(request):
     user = request.user

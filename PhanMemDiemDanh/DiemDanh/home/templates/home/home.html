@@ -1,234 +1,133 @@
-{%extends "masterPage.html" %} {%block title%} Courses UDA {%endblock%}
+{% extends "masterPage.html" %}
+{% block title %} Courses UDA {% endblock %}
 
-<!-- MENU -->
+{% block menuDashboards %} 
+  {% include '../includes/leftmenu/dashboards.html' %}
+{% endblock %}
 
-<!-- Dashboards -->
-{% block menuDashboards %} {%include '../includes/leftmenu/dashboards.html'%}
-{%endblock %}
+{% block user %} 
+  {% include "../includes/navbar/user.html" %} 
+{% endblock %}
 
-<!-- Layouts -->
+{% block content %}
+<div class="row g-4">
+  <!-- Profile -->
+  <div class="col-xl-4 col-lg-5 col-md-6">
+    <div class="card shadow border-0 rounded-4">
+      <div class="card-body text-center">
+        <!-- Avatar -->
+        <div class="mb-3">
+          
+        </div>
+        <h5 class="fw-bold mb-1">
+          {% for item in teacher %} {{ item.name_teacher }} {% endfor %}
+        </h5>
+        <p class="text-muted small mb-4">Giáo viên UDA</p>
 
-{% block layouts %} {% endblock %}
-<!-- Front Pages -->
-
-{% block frontPages %} {% endblock %}
-<!-- Apps & Pages -->
-
-{% block appAndPg %} {% endblock %}
-<!-- Components -->
-
-{% block components %} {% endblock %}
-
-<!-- Forms & Tables -->
-
-{% block formAndTb %} {% endblock %}
-<!-- Misc -->
-
-{% block Misc %} {% endblock %}
-
-<!-- NAVBAR -->
-{% block user %} {%include "../includes/navbar/user.html" %} {% endblock %}
-{%comment %}
-<!-- search -->
-{%block search %} {% endblock %} {% endcomment %}
-
-<!-- CONTENT -->
-{%block content%}
-<!-- User Profile Content -->
-<div class="row">
-  <div class="col-xl-4 col-lg-5 col-md-5">
-    <!-- About User -->
-    <div class="card mb-6">
-      <div class="card-body">
-        <small class="card-text text-uppercase text-body-secondary small">About</small>
-        <ul class="list-unstyled my-3 py-1">
+        <h6 class="text-uppercase text-muted mb-3">Thông tin cá nhân</h6>
+        <ul class="list-unstyled text-start px-3">
           {% for item in teacher %}
-          <li class="d-flex align-items-center mb-4">
-            <i class="icon-base bx bx-user"></i>
-            <span class="fw-medium mx-2">Full Name:</span>
-            <span>{{ item.name_teacher }}</span>
-          </li>
-          <li class="d-flex align-items-center mb-4">
-            <i class='bx bx-id-card'></i>
-            <span class="fw-medium mx-2">Teacher ID:</span>
-            <span>{{ item.id }}</span>
-          </li>
-          <li class="d-flex align-items-center mb-4">
-            <i class='bx bx-calendar'></i>
-            <span class="fw-medium mx-2">Birthday:</span>
-            <span>{{ item.birth_day|date:"d/m/Y" }}</span>
-          </li>
-          <li class="d-flex align-items-center mb-4">
-            <i class="icon-base bx bx-flag"></i>
-            <span class="fw-medium mx-2">Gender:</span>
-            <span>{{ item.gender }}</span>
-          </li>
+          <li class="mb-2"><i class="bx bx-id-card text-primary"></i> <b>Mã GV:</b> {{ item.id }}</li>
+          <li class="mb-2"><i class="bx bx-calendar text-success"></i> <b>Ngày sinh:</b> {{ item.birth_day|date:"d/m/Y" }}</li>
+          <li class="mb-2"><i class="bx bx-flag text-danger"></i> <b>Giới tính:</b> {{ item.gender }}</li>
           {% empty %}
-          <li class="text-center">Không có dữ liệu giáo viên</li>
+          <li class="text-center text-muted">Không có dữ liệu giáo viên</li>
           {% endfor %}
         </ul>
 
-        <small class="card-text text-uppercase text-body-secondary small">Contacts</small>
-        <ul class="list-unstyled my-3 py-1">
+        <h6 class="text-uppercase text-muted mt-4 mb-3">Liên hệ</h6>
+        <ul class="list-unstyled text-start px-3">
           {% for item in teacher %}
-          <li class="d-flex align-items-center mb-4">
-            <i class="icon-base bx bx-phone"></i>
-            <span class="fw-medium mx-2">Contact:</span>
-            <span>{{ item.contact|default:"-" }}</span>
-          </li>
-          <li class="d-flex align-items-center mb-4">
-            <i class="icon-base bx bx-envelope"></i>
-            <span class="fw-medium mx-2">Email:</span>
-            <span>{{ item.email|default:"-" }}</span>
-          </li>
+          <li class="mb-2"><i class="bx bx-phone text-info"></i> <b>SĐT:</b> {{ item.contact|default:"-" }}</li>
+          <li class="mb-2"><i class="bx bx-envelope text-warning"></i> <b>Email:</b> {{ item.email|default:"-" }}</li>
           {% empty %}
-          <li class="text-center">Không có thông tin liên hệ</li>
+          <li class="text-center text-muted">Không có thông tin liên hệ</li>
           {% endfor %}
         </ul>
       </div>
     </div>
-
-    <!--/ About User -->
   </div>
-  <style>
-    .calendar {
-      font-family: Arial, sans-serif;
-      max-width: 700px;
-      margin: 20px auto;
-      background: #fff;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      border-radius: 8px;
-    }
 
-    .col-xl-6 {
-      flex: 0 0 50%;
-      max-width: 50%;
-      padding: 0 15px;
-    }
-
-    .month {
-      background: #ffffff;
-      color: white;
-      padding: 20px;
-      text-align: center;
-      border-radius: 8px 8px 0 0;
-    }
-
-    .month h1 {
-      margin: 0;
-      font-size: 24px;
-    }
-
-    .weekdays {
-      background: #34495e;
-      color: white;
-      padding: 10px 0;
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      text-align: center;
-    }
-
-    .days {
-      padding: 10px;
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 5px;
-    }
-
-    .days div {
-      padding: 10px;
-      text-align: center;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-
-    .days div:hover {
-      background: #f0f0f0;
-    }
-
-    .today {
-      background: #3498db !important;
-      color: white;
-    }
-
-    .prev-date,
-    .next-date {
-      opacity: 0.5;
-    }
-  </style>
   <!-- Calendar -->
-  <div class="col-xl-6">
-    <div class="card mb-6">
+  <div class="col-xl-8 col-lg-7 col-md-6">
+    <div class="card shadow border-0 rounded-4">
       <div class="card-body">
         <div class="calendar">
-          <div class="month">
-            <h1>{{ current_month }}</h1>
+          <div class="month text-center py-3 border-bottom">
+            <h4 class="fw-bold text-primary m-0">{{ current_month }}</h4>
           </div>
 
-          <div class="weekdays">
-            <div>CN</div>
-            <div>T2</div>
-            <div>T3</div>
-            <div>T4</div>
-            <div>T5</div>
-            <div>T6</div>
-            <div>T7</div>
+          <div class="weekdays text-muted fw-semibold text-center py-2 border-bottom d-grid"
+               style="grid-template-columns: repeat(7, 1fr); font-size: 0.9rem;">
+            <div>CN</div><div>T2</div><div>T3</div><div>T4</div><div>T5</div><div>T6</div><div>T7</div>
           </div>
 
-          <div class="days" id="calendar-days">
-            <!-- Days will be populated by JavaScript -->
+          <div class="days p-3 d-grid" id="calendar-days"
+               style="grid-template-columns: repeat(7, 1fr); gap: 8px;">
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
 
-  <script>
-    function generateCalendar() {
-      const daysElement = document.getElementById('calendar-days');
-      const today = new Date();
-      const currentMonth = today.getMonth();
-      const currentYear = today.getFullYear();
-      const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
-      const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0);
-      const prevLastDay = new Date(currentYear, currentMonth, 0).getDate();
-      const firstDayIndex = firstDayOfMonth.getDay();
-      const lastDayIndex = lastDayOfMonth.getDay();
-      const nextDays = 7 - lastDayIndex - 1;
+<style>
+  .days div {
+    padding: 12px;
+    text-align: center;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    transition: all 0.25s ease;
+    cursor: pointer;
+  }
+  .days div:hover {
+    background: #f8f9fa;
+    transform: scale(1.05);
+  }
+  .today {
+    background: #f57b7b !important;
+    color: #fff !important;
+    font-weight: bold;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+  .prev-date, .next-date {
+    color: #adb5bd;
+  }
+</style>
 
-      let days = "";
+<script>
+  function generateCalendar() {
+    const daysElement = document.getElementById('calendar-days');
+    const today = new Date();
+    const currentMonth = today.getMonth();
+    const currentYear = today.getFullYear();
+    const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
+    const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0);
+    const prevLastDay = new Date(currentYear, currentMonth, 0).getDate();
+    const firstDayIndex = firstDayOfMonth.getDay();
+    const lastDayIndex = lastDayOfMonth.getDay();
+    const nextDays = 7 - lastDayIndex - 1;
 
-      // Previous month's days
-      for (let x = firstDayIndex; x > 0; x--) {
-        days += `<div class="prev-date">${prevLastDay - x + 1}</div>`;
-      }
-
-      // Current month's days
-      for (let i = 1; i <= lastDayOfMonth.getDate(); i++) {
-        if (i === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear()) {
-          days += `<div class="today">${i}</div>`;
-        } else {
-          days += `<div>${i}</div>`;
-        }
-      }
-
-      // Next month's days
-      for (let j = 1; j <= nextDays; j++) {
-        days += `<div class="next-date">${j}</div>`;
-      }
-
-      daysElement.innerHTML = days;
+    let days = "";
+    for (let x = firstDayIndex; x > 0; x--) {
+      days += `<div class="prev-date">${prevLastDay - x + 1}</div>`;
     }
+    for (let i = 1; i <= lastDayOfMonth.getDate(); i++) {
+      if (i === today.getDate()) {
+        days += `<div class="today">${i}</div>`;
+      } else {
+        days += `<div>${i}</div>`;
+      }
+    }
+    for (let j = 1; j <= nextDays; j++) {
+      days += `<div class="next-date">${j}</div>`;
+    }
+    daysElement.innerHTML = days;
+  }
+  generateCalendar();
+</script>
+{% endblock %}
 
-    generateCalendar();
-  </script>
-
-</div>
-</div>
-<!--/ User Profile Content -->
-{%endblock%}
-
-<!-- Footer -->
-{% block footer %} {%include "../includes/footer.html" %} {% endblock %}
+{% block footer %} 
+  {% include "../includes/footer.html" %} 
+{% endblock %}
