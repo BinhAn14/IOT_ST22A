@@ -3,7 +3,6 @@ from django.urls import path, include
 from . import views
 from home.views import video_feed
 
-app_name = 'DiemDanh'
 urlpatterns = [
     # path('/', views.home, name='home'),
     # path('index/', include('index.urls')),
@@ -17,9 +16,4 @@ path('history/export/', views.export_history_excel, name='export_history_excel')
     path('face_recognition/', views.get_face_recognition, name='face_recognition'),
     path('video_feed/', views.video_feed, name="video_feed"),
     path('lich-su-diem-danh/', views.get_history, name="lich_su_diem_danh"),
-    
-    path('train-face/', views.train_face_view, name='train_face'),
-    path('train-face/start-training/', views.start_training, name='start_training'),
-    path('training-progress/', views.training_progress, name='training_progress'),
-    path('stop-training/', views.stop_training, name='stop_training'),
 ]
